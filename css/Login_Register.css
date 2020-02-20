@@ -1,0 +1,51 @@
+@charset "utf-8";
+.title {
+    color: #9717EC;
+    font-family: Calibri;
+    font-size: 35px;
+    text-align: center;
+    text-shadow: 0 0 7px;
+    padding-top: 150px;
+}
+.para {
+    color: #823030;
+    font-family: Calibri;
+    font-size: 20px;
+    padding-left: 213px;   
+    
+}
+.loginBackground {
+    float: right;
+}
+.leftside, .rightside {
+}
+
+@media screen and (min-width:768px) {
+.leftside, .rightside {
+    height: 100vh;
+}
+}
+.leftside {
+}
+.rightside {
+}
+.img {
+    max-height: 100%;
+    width: 100%;
+    height: auto;
+	object-fit: cover;
+}
+
+.form-group {
+    padding-left: 146px;
+    padding-right: 37px;
+	
+}
+
+.btn,.btn-primary {
+    opacity: 0.8;
+    width: 101px;
+    color: #629638;
+    border-style: hidden;
+    background-color: #1D15C7;    
+}
