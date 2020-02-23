@@ -125,7 +125,7 @@ INSERT INTO `Messages` (`conversationID`, `senderID`, `messageContent`) VALUES (
 INSERT INTO `Messages` (`conversationID`, `senderID`, `messageContent`) VALUES (2, 6, 'Bọn nó bướng thế nào được cụ.');
 
 /* Team Vũ Đại chat nhóm */
-INSERT INTO `Conversations` (`conversationName`, `creatorID`, `numberOfMembers`) VALUES ("Team Vũ Đại", 1, 4);
+INSERT INTO `Conversations` (`conversationName`, `creatorID`, `numberOfMembers`) VALUES ("Team Vũ Đại", 1, 3);
 INSERT INTO `ConversationMembers` VALUES (3, 1);
 INSERT INTO `ConversationMembers` VALUES (3, 2);
 INSERT INTO `ConversationMembers` VALUES (3, 3);
@@ -145,57 +145,11 @@ INSERT INTO `Messages` (`conversationID`, `senderID`, `messageContent`) VALUES (
 INSERT INTO `Messages` (`conversationID`, `senderID`, `messageContent`) VALUES (4, 5, 'Đố đứa nào giàu bằng nhà tao.');
 
 /* Chí Phèo, A Phủ, A Sử và Tràng chat nhóm */
-INSERT INTO `Conversations` (`conversationName`, `creatorID`, `numberOfMembers`) VALUES ("Men of Culture", 3, 4);
+INSERT INTO `Conversations` (`conversationName`, `creatorID`, `numberOfMembers`) VALUES ("Men of Culture", 4, 4);
 INSERT INTO `ConversationMembers` VALUES (5, 3);
 INSERT INTO `ConversationMembers` VALUES (5, 4);
 INSERT INTO `ConversationMembers` VALUES (5, 5);
 INSERT INTO `ConversationMembers` VALUES (5, 7);
-
 INSERT INTO `Messages` (`conversationID`, `senderID`, `messageContent`) VALUES (5, 4, 'Anh Tràng chỉ em cách cưa gái đi anh.');
 INSERT INTO `Messages` (`conversationID`, `senderID`, `messageContent`) VALUES (5, 7, 'Cứ cướp vợ thằng nào đó là được.');
 INSERT INTO `Messages` (`conversationID`, `senderID`, `messageContent`, `messageStatus`) VALUES (5, 5, 'Cái đệt.', 'failed');
-
-
-/*test case 17*/
-create table temp (select distinct a.memberid as id  from `ConversationMembers` a, `Conversations` b
-where a.conversationID = b.conversationID
-and conversationName = 'Men of Culture');
-
-create table temp2 (select distinct c.senderid as id, messageContent from `ConversationMembers` a, `Conversations` b, `Messages` c
-where a.conversationID = b.conversationID
-and b.conversationID = c.conversationID
-and conversationName = 'Men of Culture');
-
-select a.id, b.messageContent from temp a left join temp2 b
-on a.id=b.id
-where messageContent is null;
-
-drop table temp2;
-
-/*test case 18*/
-select * from conversations a
-where numberOfMembers > 3;
-
-/*test case 19*/
-
-create table temp (Select user2id id, fullname, relationStatus from relationships a, users b
-where a.user2id = b.userid
-and relationStatus = 'friend'
-and user1id = 1);
-
-/*test case 20*/
-/*lấy test case 19 lam temp*/
-create table temp2 (select memberid as id, fullname from conversations a, users b, conversationmembers c
-where a.conversationID = c.conversationID
-and b.userid = c.memberid
-and conversationName = 'Team Vũ Đại'
-and memberid != 1);
-
-select a.id, a.fullname, relationStatus from temp2 a left join temp b
-on b.id=a.id
-where relationStatus is null or relationStatus ('request', 'requestedBy');
-drop table temp2;
-
-/*test case 21*/
-select conversationName from conversations
-
