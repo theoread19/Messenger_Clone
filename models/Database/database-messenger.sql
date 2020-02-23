@@ -1,151 +1,201 @@
-/*          HEART TO HEART          */
+/**********    MESSENGER DATABASE    **********/
+/**********    Note: Execute theo thứ tự    **********/
 
 
-/*          CREATE DATABASE          */
+/**********    0    **********/
+/**********    CREATE DATABASE    **********/
 DROP DATABASE IF EXISTS `MessengerAppsNameIsVeryBeautiful`;
 CREATE DATABASE `MessengerAppsNameIsVeryBeautiful`;
 USE `MessengerAppsNameIsVeryBeautiful`;
 
 
-/*          USER TABLE          */
-DROP TABLE IF EXISTS `Users`;
+/**********    1    **********/
+/**********    USERS TABLE    **********/
+-- DROP TABLE IF EXISTS `Users`;
 CREATE TABLE `Users` (
-	`userID` INT UNSIGNED AUTO_INCREMENT,
-    `username` VARCHAR(30) NOT NULL UNIQUE,
-    `password` VARCHAR(30) NOT NULL,
-    `isBlocked` BOOLEAN DEFAULT FALSE,
-    `isActive` BOOLEAN DEFAULT FALSE,
-    PRIMARY KEY (`userID`)
-) ENGINE = InnoDB;
-
-/********************************INSERT TABLE*******************************/
-INSERT INTO `Users` (`username`, `password`) VALUES ('username1', 'password');
-INSERT INTO `Users` (`username`, `password`) VALUES ('username2', 'password');
-INSERT INTO `Users` (`username`, `password`) VALUES ('username3', 'password');
-INSERT INTO `Users` (`username`, `password`) VALUES ('username4', 'password');
-INSERT INTO `Users` (`username`, `password`) VALUES ('username5', 'password');
-INSERT INTO `Users` (`username`, `password`) VALUES ('username6', 'password');
-
-
-/*          USER INFORMATION TABLE          */
-DROP TABLE IF EXISTS `UserInformation`;
-CREATE TABLE `UserInformation` (
-	`userID` INT UNSIGNED AUTO_INCREMENT,
+	`userID` INT UNSIGNED,
+	`username` VARCHAR(30) NOT NULL UNIQUE, -- Username không trùng nhau
+	`password` VARCHAR(50) NOT NULL,
     `fullName` VARCHAR(50) NOT NULL,
-    `age` TINYINT UNSIGNED,
-    `address` VARCHAR(100),
-    `phoneNumber` VARCHAR(10),
-    `email` VARCHAR(50),
-    PRIMARY KEY (`userID`),
-	CONSTRAINT `userInformationForeignKey1` FOREIGN KEY (`userID`) REFERENCES `Users` (`userID`)
+	`age` TINYINT UNSIGNED,
+	`address` VARCHAR(100),
+	`phoneNumber` VARCHAR(10),
+	`email` VARCHAR(50),
+	`isActive` BOOL DEFAULT FALSE,
+	PRIMARY KEY (`userID`)
 ) ENGINE = InnoDB;
 
-/********************************INSERT TABLE*******************************/
-INSERT INTO `UserInformation` (`fullName`, `age`, `address`, `email`, `userID`) VALUES ('Nguyễn Văn Tràng', 40, 'Xóm Ngụ Cư', 'vualidon@gmail.com',1);
-INSERT INTO `UserInformation` (`fullName`, `age`, `address`, `email`, `userID`) VALUES ('Lão Hạc', 69, 'Làng Vũ Tiểu', 'hacdaiphu@gmail.com',2);
-INSERT INTO `UserInformation` (`fullName`, `age`, `address`, `email`, `userID`) VALUES ('Cậu Vàng', 5, 'Tokyo', 'hachiko@gmail.com',3);
-INSERT INTO `UserInformation` (`fullName`, `age`, `address`, `email`, `userID`) VALUES ('Chí Phèo', 30, 'Làng Vũ Đại', 'nguoiluongthien@gmail.com',4);
-INSERT INTO `UserInformation` (`fullName`, `age`, `address`, `email`, `userID`) VALUES ('Ông Giáo', 35, 'Lãng Vũ Bão', 'thaygiaothu@gmail.com',5);
-INSERT INTO `UserInformation` (`fullName`, `age`, `address`, `email`, `userID`) VALUES ('A Phủ', 33, 'Wakanda', 'baodentonhatvung@gmail.com',6);
 
-SELECT u.`userID` 'ID', u.`username` 'Username', `password` 'Password', `fullName` 'Full Name', `age` 'Age', `address` 'Address', `email` 'Email'
-FROM `Users` u
-INNER JOIN `UserInformation` ui
-WHERE u.`userID` = ui.`userID`;
+/**********    2    **********/
+/**********    INSERT USERS    **********/
+INSERT INTO `Users` VALUES (1, 'hacdaiphu', 'lumotdantuoitom', 'Lão Hạc', 69, 'Làng Vũ Đại', NULL, NULL, FALSE);
+INSERT INTO `Users` VALUES (2, 'hachiko', 'anpateuongsting', 'Cậu Vàng', 5, 'Tokyo', NULL, NULL, FALSE);
+INSERT INTO `Users` VALUES (3, 'nguoiluongthien', 'toikhongbaogiochoichatkichthich', 'Chí Phèo', 26, 'Làng Vũ Đại', NULL, NULL, FALSE);
+INSERT INTO `Users` VALUES (4, 'baodentonhatvung', 'chungmaycovandevequanghoca', 'A Phủ', 33, 'Wakanda', NULL, NULL, FALSE);
+INSERT INTO `Users` VALUES (5, 'sudaigia', 'thocamduckiengphapnhanitaly', 'A Sử', 34, 'Tây Bắc', NULL, NULL, FALSE);
+INSERT INTO `Users` VALUES (6, 'thaygiaothu', 'toisekhongpartyvoimaynguoidau', 'Ông Giáo', 35, 'Làng Vũ Đại', NULL, NULL, FALSE);
+INSERT INTO `Users` VALUES (7, 'doitruongtrang', 'vualidon', 'Nguyễn Văn Tràng', 40, 'Xóm Ngụ Cư', NULL, NULL, FALSE);
 
 
-/*          GROUP TABLE          */
-DROP TABLE IF EXISTS `Group`;
-CREATE TABLE `Group` (
-	`groupID` INT UNSIGNED AUTO_INCREMENT,
-    `groupName` VARCHAR(50),
-    PRIMARY KEY (`groupID`)
-) ENGINE = InnoDB;
-/*Thay đổi giá trị bắt đầu tăng*/
-ALTER TABLE groupChat AUTO_INCREMENT = 2000000001;
-
-/********************************INSERT TABLE*******************************/
-INSERT INTO `Group` (`groupName`) VALUES ("Men of Culture");
-INSERT INTO `Group` (`groupName`) VALUES ("Bronze Noobs");
-INSERT INTO `Group` (`groupName`) VALUES ("Filthy Casuls");
-
-
-/*          MEMBERS TABLE          */
-DROP TABLE IF EXISTS `Members`;
-CREATE TABLE `Members` (
-    `groupID` INT UNSIGNED,
-    `userID` INT UNSIGNED,
-    PRIMARY KEY (`groupID`, `userID`),
-    CONSTRAINT `membersForeignKey1` FOREIGN KEY (`groupID`) REFERENCES `Group` (`groupID`),
-    CONSTRAINT `membersForeignKey2` FOREIGN KEY (`userID`) REFERENCES `Users` (`userID`)
+/**********    3    **********/
+/**********    RELATIONSHIPS TABLE    **********/
+-- DROP TABLE IF EXISTS `Relationships`;
+CREATE TABLE `Relationships` (
+	`user1ID` INT UNSIGNED,
+	`user2ID` INT UNSIGNED,
+	`relationStatus` VARCHAR(20), -- 'request', 'requestedBy', 'friend'
+    `blockStatus` BOOL DEFAULT FALSE,
+	PRIMARY KEY (`user1ID`, `user2ID`),
+	CONSTRAINT `relationshipsForeignKey1` FOREIGN KEY (`user1ID`) REFERENCES `Users` (`userID`),
+	CONSTRAINT `relationshipsForeignKey2` FOREIGN KEY (`user2ID`) REFERENCES `Users` (`userID`)
 ) ENGINE = InnoDB;
 
-INSERT INTO `Members` VALUES (2000000001, 1);
-INSERT INTO `Members` VALUES (2000000001, 2);
-INSERT INTO `Members` VALUES (2000000001, 3);
-INSERT INTO `Members` VALUES (2000000002, 2);
-INSERT INTO `Members` VALUES (2000000002, 3);
-INSERT INTO `Members` VALUES (2000000002, 4);
-INSERT INTO `Members` VALUES (2000000003, 3);
-INSERT INTO `Members` VALUES (2000000003, 4);
-INSERT INTO `Members` VALUES (2000000003, 1);
+
+/**********    4    **********/
+/**********    INSERT RELATIONSHIPS    **********/
+INSERT INTO `Relationships` (`user1ID`, `relationStatus`, `user2ID`) VALUES (1, 'friend', 2);
+INSERT INTO `Relationships` (`user1ID`, `relationStatus`, `user2ID`) VALUES (2, 'friend', 1);
+INSERT INTO `Relationships` (`user1ID`, `relationStatus`, `user2ID`) VALUES (1, 'friend', 6);
+INSERT INTO `Relationships` (`user1ID`, `relationStatus`, `user2ID`) VALUES (6, 'friend', 1);
+INSERT INTO `Relationships` (`user1ID`, `relationStatus`, `user2ID`) VALUES (4, 'request', 7);
+INSERT INTO `Relationships` (`user1ID`, `relationStatus`, `user2ID`) VALUES (7, 'requestedBy', 4);
+INSERT INTO `Relationships` (`user1ID`, `blockStatus`, `user2ID`) VALUES (2, TRUE, 1)
+ON DUPLICATE KEY UPDATE `blockStatus` = TRUE;
+INSERT INTO `Relationships` (`user1ID`, `blockStatus`, `user2ID`) VALUES (5, TRUE, 4)
+ON DUPLICATE KEY UPDATE `blockStatus` = TRUE;
 
 
-/*          MESSAGES TABLE          */
-DROP TABLE IF EXISTS `Messages`;
+/**********    5    **********/
+/**********    CONVERSATIONS TABLE    **********/
+-- DROP TABLE IF EXISTS `Conversations`;
+CREATE TABLE `Conversations` (
+	`conversationID` INT UNSIGNED AUTO_INCREMENT,
+    `conversationName` VARCHAR(50) DEFAULT NULL,
+	`creatorID` INT UNSIGNED,
+    `numberOfMembers` TINYINT UNSIGNED DEFAULT 2,
+    PRIMARY KEY (`conversationID`),
+    CONSTRAINT `conversationsForeignKey1` FOREIGN KEY (`creatorID`) REFERENCES `Users` (`userID`)
+) ENGINE = InnoDB;
+
+
+/**********    6    **********/
+/**********    CONVERSATION MEMBERS TABLE    **********/
+-- DROP TABLE IF EXISTS `ConversationMembers`;
+CREATE TABLE `ConversationMembers` (
+    `conversationID` INT UNSIGNED,
+    `memberID` INT UNSIGNED,
+    PRIMARY KEY (`conversationID`, `memberID`),
+    CONSTRAINT `conversationMembersForeignKey1` FOREIGN KEY (`conversationID`) REFERENCES `Conversations` (`conversationID`),
+    CONSTRAINT `conversationMembersForeignKey2` FOREIGN KEY (`memberID`) REFERENCES `Users` (`userID`)
+) ENGINE = InnoDB;
+
+
+/**********    7    **********/
+/**********    MESSAGES TABLE    **********/
+-- DROP TABLE IF EXISTS `Messages`;
 CREATE TABLE `Messages` (
 	`messageID` INT UNSIGNED AUTO_INCREMENT,
-    `messageType` varchar(30),
-    `messageContent` TEXT,
-    PRIMARY KEY (idtn)
-) ENGINE = InnoDB;
-
-INSERT INTO `Messages` (`messageContent`) VALUES ('I, Giorno Giovanna, have a dream.');
-INSERT INTO `Messages` (`messageContent`) VALUES ('I yearn for true gender equality.');
-INSERT INTO `Messages` (`messageContent`) VALUES ('Ah, I see you are a man of culture as well.');
-INSERT INTO `Messages` (`messageContent`) VALUES ('It\'s over 9000!');
-INSERT INTO `Messages` (`messageContent`) VALUES ('This is not even my final form.');
-INSERT INTO `Messages` (`messageContent`) VALUES ('Well, what is it?');
-INSERT INTO `Messages` (`messageContent`) VALUES ('It\'s over, Anakin. I have the high ground.');
-INSERT INTO `Messages` (`messageContent`) VALUES ('You underestimate my power.');
-INSERT INTO `Messages` (`messageContent`) VALUES ('RIP in Spaghetti, never forgetti.');
-
-
-
-/*          MESSAGE DETAILS TABLE          */
-DROP TABLE IF EXISTS `MessageDetails`;
-CREATE TABLE `MessageDetails` (
-	`messageID` INT UNSIGNED AUTO_INCREMENT,
+    `messageType` VARCHAR(10) DEFAULT 'text',
+    `conversationID` INT UNSIGNED,
     `senderID` INT UNSIGNED,
-    `receiverID` INT UNSIGNED,
-    `groupID` INT UNSIGNED,
-    `timeStamp` DATETIME DEFAULT CURRENT_TIMESTAMP(),
-    `messageStatus` VARCHAR(20) DEFAULT 'Failed',
+    `messageContent` TEXT,
+    `timestamp` DATETIME DEFAULT CURRENT_TIMESTAMP(),
+    `messageStatus` VARCHAR(20) DEFAULT 'sending', -- 'sending', 'sent', 'seen', 'failed'
     PRIMARY KEY (`messageID`),
-    CONSTRAINT `messageDetailsForeignKey1` FOREIGN KEY (`messageID`) REFERENCES `Messages` (`messageID`),
-    CONSTRAINT `messageDetailsForeignKey2` FOREIGN KEY (`senderID`) REFERENCES `Users` (`userID`),
-    CONSTRAINT `messageDetailsForeignKey3` FOREIGN KEY (`receiverID`) REFERENCES `Users` (`userID`),
-    CONSTRAINT `messageDetailsForeignKey4` FOREIGN KEY (`groupID`) REFERENCES `Group` (`groupID`)
+    CONSTRAINT `messagesForeignKey1` FOREIGN KEY (`senderID`) REFERENCES `Users` (`userID`),
+    CONSTRAINT `messagesForeignKey2` FOREIGN KEY (`conversationID`) REFERENCES `Conversations` (`conversationID`)
 ) ENGINE = InnoDB;
 
-INSERT INTO `MessageDetails` (`senderID`, `receiverID`, `groupID`) VALUES (1, NULL, 2000000001);
-INSERT INTO `MessageDetails` (`senderID`, `receiverID`, `groupID`) VALUES (2, NULL, 2000000001);
-INSERT INTO `MessageDetails` (`senderID`, `receiverID`, `groupID`) VALUES (3, NULL, 2000000001);
-INSERT INTO `MessageDetails` (`senderID`, `receiverID`, `groupID`) VALUES (2, NULL, 2000000002);
-INSERT INTO `MessageDetails` (`senderID`, `receiverID`, `groupID`) VALUES (3, NULL, 2000000002);
-INSERT INTO `MessageDetails` (`senderID`, `receiverID`, `groupID`) VALUES (4, NULL, 2000000002);
-INSERT INTO `MessageDetails` (`senderID`, `receiverID`, `groupID`) VALUES (3, NULL, 2000000003);
-INSERT INTO `MessageDetails` (`senderID`, `receiverID`, `groupID`) VALUES (4, NULL, 2000000003);
-INSERT INTO `MessageDetails` (`senderID`, `receiverID`, `groupID`) VALUES (1, NULL, 2000000003);
+
+/**********    8    **********/
+/**********    INSERT CONVERSATIONS AND MESSAGES    **********/
+/* Lão Hạc và Cậu Vàng chat riêng */
+INSERT INTO `Conversations` (`creatorID`) VALUES (1);
+INSERT INTO `ConversationMembers` VALUES (1, 1);
+INSERT INTO `ConversationMembers` VALUES (1, 2);
+INSERT INTO `Messages` (`conversationID`, `senderID`, `messageContent`) VALUES (1, 1, 'Đi Trần Duy Hưng không cậu?');
+INSERT INTO `Messages` (`conversationID`, `senderID`, `messageContent`) VALUES (1, 2, 'Có chó cái thì đi.');
+
+/* Lão Hạc và Ông Giáo chat riêng */
+INSERT INTO `Conversations` (`creatorID`) VALUES (1);
+INSERT INTO `ConversationMembers` VALUES (2, 1);
+INSERT INTO `ConversationMembers` VALUES (2, 6);
+INSERT INTO `Messages` (`conversationID`, `senderID`, `messageContent`) VALUES (2, 1, 'Cậu Vàng đi đời rồi Ông Giáo ạ. 5000 đô.');
+INSERT INTO `Messages` (`conversationID`, `senderID`, `messageContent`) VALUES (2, 1, 'Tầm này mấy Lý trưởng, lũ mọt dân tuổi gì mà cà khịa tôi nữa.');
+INSERT INTO `Messages` (`conversationID`, `senderID`, `messageContent`) VALUES (2, 6, 'Bọn nó bướng thế nào được cụ.');
+
+/* Team Vũ Đại chat nhóm */
+INSERT INTO `Conversations` (`conversationName`, `creatorID`, `numberOfMembers`) VALUES ("Team Vũ Đại", 1, 4);
+INSERT INTO `ConversationMembers` VALUES (3, 1);
+INSERT INTO `ConversationMembers` VALUES (3, 2);
+INSERT INTO `ConversationMembers` VALUES (3, 3);
+INSERT INTO `ConversationMembers` VALUES (3, 6);
+INSERT INTO `Messages` (`conversationID`, `senderID`, `messageContent`) VALUES (3, 1, 'Tôi thành đại gia rồi mấy thím ạ.');
+INSERT INTO `Messages` (`conversationID`, `senderID`, `messageContent`) VALUES (3, 3, 'Cụ đầu tư cho tôi con đề.');
+INSERT INTO `Messages` (`conversationID`, `senderID`, `messageContent`) VALUES (3, 6, 'Tôi phải đi Nepal rồi cụ ạ.');
+INSERT INTO `Messages` (`conversationID`, `senderID`, `messageContent`) VALUES (3, 2, 'Bán bố để làm giàu thì có gì hay? Có ngon thì cho bố ăn Pa-tê uống Sờ-ting xem nào.');
+
+/* Cậu Vàng, Chí Phèo và A Sử chat nhóm */
+INSERT INTO `Conversations` (`conversationName`, `creatorID`, `numberOfMembers`) VALUES ("Iron IV", 2, 3);
+INSERT INTO `ConversationMembers` VALUES (4, 2);
+INSERT INTO `ConversationMembers` VALUES (4, 3);
+INSERT INTO `ConversationMembers` VALUES (4, 5);
+INSERT INTO `Messages` (`conversationID`, `senderID`, `messageContent`) VALUES (4, 2, 'Chào mừng các thím đếm với đội phản diện.');
+INSERT INTO `Messages` (`conversationID`, `senderID`, `messageContent`) VALUES (4, 3, 'Tôi không phải nhân vật phản diện, tôi muốn làm người lương thiện.');
+INSERT INTO `Messages` (`conversationID`, `senderID`, `messageContent`) VALUES (4, 5, 'Đố đứa nào giàu bằng nhà tao.');
+
+/* Chí Phèo, A Phủ, A Sử và Tràng chat nhóm */
+INSERT INTO `Conversations` (`conversationName`, `creatorID`, `numberOfMembers`) VALUES ("Men of Culture", 3, 4);
+INSERT INTO `ConversationMembers` VALUES (5, 3);
+INSERT INTO `ConversationMembers` VALUES (5, 4);
+INSERT INTO `ConversationMembers` VALUES (5, 5);
+INSERT INTO `ConversationMembers` VALUES (5, 7);
+
+INSERT INTO `Messages` (`conversationID`, `senderID`, `messageContent`) VALUES (5, 4, 'Anh Tràng chỉ em cách cưa gái đi anh.');
+INSERT INTO `Messages` (`conversationID`, `senderID`, `messageContent`) VALUES (5, 7, 'Cứ cướp vợ thằng nào đó là được.');
+INSERT INTO `Messages` (`conversationID`, `senderID`, `messageContent`, `messageStatus`) VALUES (5, 5, 'Cái đệt.', 'failed');
 
 
-/*          BLOCK DETAILS TABLE          */
-DROP TABLE IF EXISTS `BlockDetails`;
-CREATE TABLE `BlockDetails` (
-	`blockerID` INT UNSIGNED,
-    `blockedID` INT UNSIGNED,
-    `timeStamp` DATETIME DEFAULT CURRENT_TIMESTAMP(),
-    PRIMARY KEY (`blockerID`, `blockedID`)
-) ENGINE = InnoDB;
+/*test case 17*/
+create table temp (select distinct a.memberid as id  from `ConversationMembers` a, `Conversations` b
+where a.conversationID = b.conversationID
+and conversationName = 'Men of Culture');
 
-INSERT INTO `BlockDetails` (`blockerID`, `blockedID`) VALUES (2, 3);
+create table temp2 (select distinct c.senderid as id, messageContent from `ConversationMembers` a, `Conversations` b, `Messages` c
+where a.conversationID = b.conversationID
+and b.conversationID = c.conversationID
+and conversationName = 'Men of Culture');
+
+select a.id, b.messageContent from temp a left join temp2 b
+on a.id=b.id
+where messageContent is null;
+
+drop table temp2;
+
+/*test case 18*/
+select * from conversations a
+where numberOfMembers > 3;
+
+/*test case 19*/
+
+create table temp (Select user2id id, fullname, relationStatus from relationships a, users b
+where a.user2id = b.userid
+and relationStatus = 'friend'
+and user1id = 1);
+
+/*test case 20*/
+/*lấy test case 19 lam temp*/
+create table temp2 (select memberid as id, fullname from conversations a, users b, conversationmembers c
+where a.conversationID = c.conversationID
+and b.userid = c.memberid
+and conversationName = 'Team Vũ Đại'
+and memberid != 1);
+
+select a.id, a.fullname, relationStatus from temp2 a left join temp b
+on b.id=a.id
+where relationStatus is null or relationStatus ('request', 'requestedBy');
+drop table temp2;
+
+/*test case 21*/
+select conversationName from conversations
+
